@@ -91,7 +91,13 @@ int __cdecl main(void) {
 		FILE *f = fopen("index.html", "r");
 		char buffer[DEFAULT_BUFLEN] = { 0 };
 		fread(buffer, 1, DEFAULT_BUFLEN, f);
-		send(ClientSocket, buffer, DEFAULT_BUFLEN, 0);
+		std::string htmlContent = buffer;
+
+		htmlContent = 
+		"HTTP/1.0 200 OK \r\n"
+		"Content-type: text/html\r\n\n" + htmlContent;
+
+		send(ClientSocket, htmlContent.c_str(), htmlContent.size(), 0);
 
 	}
 
