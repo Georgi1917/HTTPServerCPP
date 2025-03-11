@@ -71,33 +71,54 @@ int __cdecl main(void) {
 		return 1;
 	}
 
-	ClientSocket = accept(ListenSocket, NULL, NULL);
+	std::cout << "Listening on Port: " << DEFAULT_PORT << std::endl;
 
-	if (ClientSocket == INVALID_SOCKET) {
-		std::cout << "accept failed: " << WSAGetLastError() << std::endl;
-		closesocket(ListenSocket);
-		WSACleanup();
-		return 1;
-	}
+	while(1) {
 
-	char request[DEFAULT_BUFLEN];
+		ClientSocket = accept(ListenSocket, NULL, NULL);
 
-	iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
+		if (ClientSocket == INVALID_SOCKET) {
 
-	std::cout << request << std::endl;
+			std::cout << "accept failed: " << WSAGetLastError() << std::endl;
+			closesocket(ListenSocket);
+			WSACleanup();
+			return 1;
 
-	if (memcmp(request, "GET / ", 6) == 0) {
+		}
 
-		FILE *f = fopen("index.html", "r");
-		char buffer[DEFAULT_BUFLEN] = { 0 };
-		fread(buffer, 1, DEFAULT_BUFLEN, f);
-		std::string htmlContent = buffer;
+		char request[DEFAULT_BUFLEN];
 
-		htmlContent = 
-		"HTTP/1.0 200 OK \r\n"
-		"Content-type: text/html\r\n\n" + htmlContent;
+		iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
 
-		send(ClientSocket, htmlContent.c_str(), htmlContent.size(), 0);
+		if (iResult == 0) {
+
+			std::cout << "Connection Closed" << std::endl;
+			break;
+
+		}
+		else if (iResult < 0) {
+
+			std::cout << "Recv failed. Terminating Connection." << WSAGetLastError() << std::endl;
+			closesocket(ClientSocket);
+			WSACleanup();
+			break;
+
+		}
+
+		if (memcmp(request, "GET / ", 6) == 0) {
+
+			FILE *f = fopen("index.html", "r");
+			char buffer[DEFAULT_BUFLEN] = { 0 };
+			fread(buffer, 1, DEFAULT_BUFLEN, f);
+			std::string htmlContent = buffer;
+
+			htmlContent = 
+			"HTTP/1.0 200 OK \r\n"
+			"Content-type: text/html\r\n\n" + htmlContent;
+
+			send(ClientSocket, htmlContent.c_str(), htmlContent.size(), 0);
+
+		}
 
 	}
 
