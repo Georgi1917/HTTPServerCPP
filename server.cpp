@@ -14,14 +14,27 @@
 
 HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
+	if (memcmp(request, "GET /favicon.ico", 16) == 0) {
+
+		std::ifstream file("404.html");
+		std:: ostringstream contentStream;
+		contentStream << file.rdbuf();
+		std::string header = "HTTP/1.0 400 Not Found";
+		std::string ctype = "Content-Type: text/html";
+		
+		return HTTPResponse(header, ctype, contentStream.str());
+
+	}
+
 	if (memcmp(request, "GET / ", 6) == 0) {
 
 		std::ifstream file("index.html");
 		std::ostringstream contentStream;
 		contentStream << file.rdbuf();
-		HTTPResponse hr = HTTPResponse(contentStream.str());
+		std::string header = "HTTP/1.0 200 OK";
+		std::string ctype = "Content-Type: text/html";
 		
-		return hr;
+		return HTTPResponse(header, ctype, contentStream.str());
 
 	}
 
@@ -127,7 +140,7 @@ int main() {
 		HTTPResponse hr = buildHttpResponse(request);
 
 		std::cout << hr.GetResponse() << std::endl;
-
+		
 		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 
 		shutdown(ClientSocket, SD_SEND);

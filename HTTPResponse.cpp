@@ -8,18 +8,17 @@ class HTTPResponse {
         std::string HtmlResponse;
 
     public:
-        HTTPResponse(std::string htmlResponse) {
+        HTTPResponse(std::string header, std::string ctype, std::string htmlResponse) {
 
-            HttpHeader = "HTTP/1.0 200 OK\r\n";
-            contentType = "Content-type: text/html\r\n\n";
-
-            HtmlResponse = HttpHeader + contentType + htmlResponse;
+            HttpHeader = header;
+            contentType = ctype;
+            HtmlResponse = htmlResponse;
 
         }
 
         std::string GetResponse() {
 
-            return HtmlResponse;
+            return HttpHeader + "\r\n" + contentType + "\r\n\n" + HtmlResponse;
 
         }
 
