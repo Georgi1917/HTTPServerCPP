@@ -3,13 +3,31 @@
 #include <ws2tcpip.h>
 #include <thread>
 #include <cstring>
+#include <fstream>
+#include <sstream>
+#include "HTTPResponse.cpp"
 
 #pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "8080"
 #define DEFAULT_BUFLEN 512
 
-int __cdecl main(void) {
+HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
+
+	if (memcmp(request, "GET / ", 6)) {
+
+		std::ifstream file("index.html");
+		std::ostringstream contentStream;
+		contentStream << file.rdbuf();
+		HTTPResponse hr = HTTPResponse(contentStream.str());
+		
+		return hr;
+
+	}
+
+}
+
+int main() {
 
 	SOCKET ListenSocket = INVALID_SOCKET;
 	SOCKET ClientSocket = INVALID_SOCKET;
@@ -80,9 +98,7 @@ int __cdecl main(void) {
 		if (ClientSocket == INVALID_SOCKET) {
 
 			std::cout << "accept failed: " << WSAGetLastError() << std::endl;
-			closesocket(ListenSocket);
-			WSACleanup();
-			return 1;
+			continue;
 
 		}
 
@@ -90,46 +106,29 @@ int __cdecl main(void) {
 
 		iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
 
+		std::cout << request << "\n\n";
+
 		if (iResult == 0) {
 
 			std::cout << "Connection Closed" << std::endl;
-			break;
+			closesocket(ClientSocket);
+			continue;
 
 		}
 		else if (iResult < 0) {
 
-			std::cout << "Recv failed. Terminating Connection." << WSAGetLastError() << std::endl;
-			closesocket(ClientSocket);
-			WSACleanup();
-			break;
+			std::cout << "Recv failed" << WSAGetLastError() << std::endl;
+			continue;
 
 		}
 
-		if (memcmp(request, "GET / ", 6) == 0) {
+		HTTPResponse hr = buildHttpResponse(request);
 
-			FILE *f = fopen("index.html", "r");
-			char buffer[DEFAULT_BUFLEN] = { 0 };
-			fread(buffer, 1, DEFAULT_BUFLEN, f);
-			std::string htmlContent = buffer;
+		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 
-			htmlContent = 
-			"HTTP/1.0 200 OK \r\n"
-			"Content-type: text/html\r\n\n" + htmlContent;
 
-			send(ClientSocket, htmlContent.c_str(), htmlContent.size(), 0);
-
-		}
-
-	}
-
-	iResult = shutdown(ClientSocket, SD_SEND);
-
-	if (iResult == SOCKET_ERROR) {
-
-		std::cout << "Shutdown failed " << WSAGetLastError() << std::endl;
+		shutdown(ClientSocket, SD_SEND);
 		closesocket(ClientSocket);
-		WSACleanup();
-		return 1;
 
 	}
 
