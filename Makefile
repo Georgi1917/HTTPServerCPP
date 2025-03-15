@@ -6,14 +6,21 @@ LDFLAGS = -lws2_32
 
 SERVER = server
 
-# Source files
-SERVER_SRC = server.cpp
+
+SRCS = server.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+LIBS = -lws2_32
 
 all: $(SERVER)
 
-# Compile server
-$(SERVER): $(SERVER_SRC)
-	$(CXX) $(CXXFLAGS) $(SERVER_SRC) -o $(SERVER) $(LDFLAGS)
+$(SERVER): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 
 clean:
-	rm -f $(SERVER)
+	rm -f $(OBJS) $(SERVER)

@@ -14,7 +14,7 @@
 
 HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
-	if (memcmp(request, "GET / ", 6)) {
+	if (memcmp(request, "GET / ", 6) == 0) {
 
 		std::ifstream file("index.html");
 		std::ostringstream contentStream;
@@ -102,7 +102,7 @@ int main() {
 
 		}
 
-		char request[DEFAULT_BUFLEN];
+		char request[DEFAULT_BUFLEN] = { 0 };
 
 		iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
 
@@ -122,10 +122,13 @@ int main() {
 
 		}
 
+		std::cout << "Pesho" << std::endl;
+
 		HTTPResponse hr = buildHttpResponse(request);
 
-		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
+		std::cout << hr.GetResponse() << std::endl;
 
+		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 
 		shutdown(ClientSocket, SD_SEND);
 		closesocket(ClientSocket);
