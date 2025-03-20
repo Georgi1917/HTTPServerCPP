@@ -12,11 +12,21 @@
 #define DEFAULT_PORT "8080"
 #define DEFAULT_BUFLEN 512
 
+bool endsWith( std::string const &fullString, std::string const &ending) {
+
+	if (fullString.length() >= ending.length()) {
+
+		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+
+	} else return false;
+
+}
+
 HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
 	if (memcmp(request, "GET /favicon.ico", 16) == 0) {
 
-		std::ifstream file("404.html");
+		std::ifstream file("templates/404.html");
 		std:: ostringstream contentStream;
 		contentStream << file.rdbuf();
 		std::string header = "HTTP/1.0 400 Not Found";
@@ -28,12 +38,37 @@ HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
 	if (memcmp(request, "GET / ", 6) == 0) {
 
-		std::ifstream file("index.html");
+		std::ifstream file("templates/index.html");
 		std::ostringstream contentStream;
 		contentStream << file.rdbuf();
 		std::string header = "HTTP/1.0 200 OK";
 		std::string ctype = "Content-Type: text/html";
 		
+		return HTTPResponse(header, ctype, contentStream.str());
+
+	}
+
+	else {
+
+		std::string str(request);
+		std::string fileName = "";
+
+		for (int i = str.find('/') + 1; i < str.size(); i++) {
+
+			if (str[i] == ' ') break;
+			else fileName += str[i];
+
+		}
+
+		std::ifstream file("templates/" + fileName);
+		std::ostringstream contentStream;
+		contentStream << file.rdbuf();
+
+		std::string header = "HTTP/1.0 200 OK";
+		std::string ctype;
+		if (endsWith(fileName, ".css")) ctype = "Content-Type: text/css";
+		else ctype = "Content-Type: text/html";
+
 		return HTTPResponse(header, ctype, contentStream.str());
 
 	}
@@ -102,7 +137,7 @@ int main() {
 		return 1;
 	}
 
-	std::cout << "Listening on Port: " << DEFAULT_PORT << std::endl;
+	std::cout << "Listening on Port: " << DEFAULT_PORT << "\n\n";
 
 	while(1) {
 
@@ -135,11 +170,9 @@ int main() {
 
 		}
 
-		std::cout << "Pesho" << std::endl;
-
 		HTTPResponse hr = buildHttpResponse(request);
 
-		std::cout << hr.GetResponse() << std::endl;
+		std::cout << hr.GetResponse() << "\n\n";
 		
 		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 
