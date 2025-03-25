@@ -64,6 +64,19 @@ HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 		std::ostringstream contentStream;
 		contentStream << file.rdbuf();
 
+		if (contentStream.str() == "") {
+
+			std::ifstream file("templates/404.html");
+
+			contentStream << file.rdbuf();
+
+			std::string header = "HTTP/1.0 400 Not Found";
+			std::string ctype = "Content-Type: text/html";
+
+			return HTTPResponse(header, ctype, contentStream.str());
+
+		}
+
 		std::string header = "HTTP/1.0 200 OK";
 		std::string ctype;
 		if (endsWith(fileName, ".css")) ctype = "Content-Type: text/css";
