@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "HTTPResponse.cpp"
+#include "UrlRouter.cpp"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -19,6 +20,12 @@ bool endsWith( std::string const &fullString, std::string const &ending) {
 		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
 
 	} else return false;
+
+}
+
+void sayHello(char c[DEFAULT_BUFLEN]) {
+
+	std::cout << "Hello from a class." << std::endl;
 
 }
 
@@ -156,6 +163,9 @@ int main() {
 
 		ClientSocket = accept(ListenSocket, NULL, NULL);
 
+		std::string s = "about/";
+		UrlNode node(s, sayHello);
+
 		if (ClientSocket == INVALID_SOCKET) {
 
 			std::cout << "accept failed: " << WSAGetLastError() << std::endl;
@@ -166,6 +176,8 @@ int main() {
 		char request[DEFAULT_BUFLEN] = { 0 };
 
 		iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
+
+		node.Execute(request);
 
 		std::cout << request << "\n\n";
 
