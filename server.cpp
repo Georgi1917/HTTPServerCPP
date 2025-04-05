@@ -185,8 +185,6 @@ int main() {
 		}
 
 		HTTPResponse hr = buildHttpResponse(request);
-
-		std::cout << hr.GetResponse() << "\n\n";
 		
 		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 

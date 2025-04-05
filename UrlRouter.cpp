@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#include "HTTPResponse.cpp"
-
 class UrlNode {
 
     std::string url;
