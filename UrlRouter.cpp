@@ -1,13 +1,15 @@
 #include <iostream>
 #include <vector>
 
+#include "HTTPResponse.cpp"
+
 class UrlNode {
 
     std::string url;
-    void (*funcPtr)(char[512]);
+    HTTPResponse (*funcPtr)(char[512]);
 
     public:
-        UrlNode (std::string requestUrl, void(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
+        UrlNode (std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
 
         void Execute(char value[512]) {
 
@@ -25,7 +27,7 @@ class UrlRouter {
 
     public :
 
-        void AddRoute(std::string url, void(*func)(char[512])) {
+        void AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
 
             UrlNode node(url, func);
 

@@ -23,12 +23,6 @@ bool endsWith( std::string const &fullString, std::string const &ending) {
 
 }
 
-void sayHello(char c[DEFAULT_BUFLEN]) {
-
-	std::cout << "Hello from a class." << std::endl;
-
-}
-
 HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
 	if (memcmp(request, "GET /favicon.ico", 16) == 0) {
@@ -163,9 +157,6 @@ int main() {
 
 		ClientSocket = accept(ListenSocket, NULL, NULL);
 
-		std::string s = "about/";
-		UrlNode node(s, sayHello);
-
 		if (ClientSocket == INVALID_SOCKET) {
 
 			std::cout << "accept failed: " << WSAGetLastError() << std::endl;
@@ -176,8 +167,6 @@ int main() {
 		char request[DEFAULT_BUFLEN] = { 0 };
 
 		iResult = recv(ClientSocket, request, DEFAULT_BUFLEN, 0);
-
-		node.Execute(request);
 
 		std::cout << request << "\n\n";
 
