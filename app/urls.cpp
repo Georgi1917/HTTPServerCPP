@@ -1,4 +1,4 @@
-#include "../UrlRouter.cpp"
+#include "../UrlRouter.h"
 #include "views.cpp"
 
 UrlRouter router = UrlRouter();

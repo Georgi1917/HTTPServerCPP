@@ -1,36 +1,49 @@
 #include <iostream>
 #include <vector>
+#include "HTTPResponse.h"
+#include "UrlRouter.h"
 
-class UrlNode {
+// class UrlNode {
 
-    std::string url;
-    HTTPResponse (*funcPtr)(char[512]);
+//     std::string url;
+//     HTTPResponse (*funcPtr)(char[512]);
 
-    public:
-        UrlNode (std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
+//     public:
+//         UrlNode (std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
 
-        void Execute(char value[512]) {
+//         void Execute(char value[512]) {
 
-            funcPtr(value);
+//             funcPtr(value);
 
-        }
+//         }
 
-};
+// };
 
-class UrlRouter {
+// class UrlRouter {
 
-    private : 
+//     private : 
 
-        std::vector<UrlNode> routes;
+//         std::vector<UrlNode> routes;
 
-    public :
+//     public :
 
-        void AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
+//         void AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
 
-            UrlNode node(url, func);
+//             UrlNode node(url, func);
 
-            routes.push_back(node);
+//             routes.push_back(node);
 
-        }
+//         }
 
-};
+// };
+
+UrlNode::UrlNode(std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
+void UrlNode::Execute(char value[512]) { funcPtr(value); }
+
+void UrlRouter::AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
+
+    UrlNode node(url, func);
+
+    routes.push_back(node);
+
+}

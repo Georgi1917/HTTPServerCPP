@@ -5,8 +5,8 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-#include "HTTPResponse.cpp"
-#include "UrlRouter.cpp"
+#include "HTTPResponse.h"
+#include "UrlRouter.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 

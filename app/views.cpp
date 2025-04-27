@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../HTTPResponse.cpp"
-#include "../Render.cpp"
+#include "../HTTPResponse.h"
+#include "../Render.h"
 
 HTTPResponse index(char request[512]) {
 

@@ -2,7 +2,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "HTTPResponse.cpp";
+#include "Render.h"
+#include "HTTPResponse.h";
 
 HTTPResponse Render(char request[512], std::string templateFilePath) {
 
