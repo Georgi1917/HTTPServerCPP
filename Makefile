@@ -7,7 +7,7 @@ LDFLAGS = -lws2_32
 SERVER = server
 
 
-SRCS = server.cpp
+SRCS = server.cpp HTTPResponse.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 LIBS = -lws2_32
