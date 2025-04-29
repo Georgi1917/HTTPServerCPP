@@ -91,6 +91,23 @@ HTTPResponse buildHttpResponse(char request[DEFAULT_BUFLEN]) {
 
 }
 
+std::string GetURL(char buffer[DEFAULT_BUFLEN]) {
+
+	std::string url = "";
+	std::string buf(buffer);
+
+	for (int i = buf.find('/') + 1; i < buf.size(); i++) {
+
+		if (buf[i] == ' ') break;
+
+		url += buf[i];
+
+	}
+
+	return url;
+	
+}
+
 int main() {
 
 	SOCKET ListenSocket = INVALID_SOCKET;
@@ -188,6 +205,11 @@ int main() {
 
 		AddingRoutes();
 
+		std::string url = GetURL(request);
+
+		if (url == "") std::cout << "Yes\n" << std::endl;
+		else std::cout << "No\n" << std::endl;
+		
 		HTTPResponse hr = buildHttpResponse(request);
 		
 		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
