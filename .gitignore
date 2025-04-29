@@ -2,3 +2,7 @@
 server.exe
 server.o
 HTTPResponse.o
+Render.o
+UrlRouter.o
+app/urls.o
+app/views.o

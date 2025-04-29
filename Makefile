@@ -7,7 +7,7 @@ LDFLAGS = -lws2_32
 SERVER = server
 
 
-SRCS = server.cpp HTTPResponse.cpp
+SRCS = server.cpp HTTPResponse.cpp UrlRouter.cpp Render.cpp app/urls.cpp app/views.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 LIBS = -lws2_32

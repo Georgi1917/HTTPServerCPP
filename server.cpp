@@ -7,6 +7,8 @@
 #include <sstream>
 #include "HTTPResponse.h"
 #include "UrlRouter.h"
+#include "app/urls.h"
+#include "app/views.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -183,6 +185,8 @@ int main() {
 			continue;
 
 		}
+
+		AddingRoutes();
 
 		HTTPResponse hr = buildHttpResponse(request);
 		
