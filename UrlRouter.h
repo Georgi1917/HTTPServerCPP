@@ -13,7 +13,7 @@ class UrlNode {
     public:
         UrlNode(std::string requestUrl, HTTPResponse(*func)(char[512]));
 
-        void Execute(char value[512]);
+        HTTPResponse Execute(char value[512]);
 
         std::string GetUrl();
 

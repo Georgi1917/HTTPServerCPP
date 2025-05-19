@@ -38,7 +38,7 @@
 // };
 
 UrlNode::UrlNode(std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
-void UrlNode::Execute(char value[512]) { funcPtr(value); }
+HTTPResponse UrlNode::Execute(char value[512]) { funcPtr(value); }
 std::string UrlNode::GetUrl() { return this->url; }
 
 void UrlRouter::AddRoute(std::string url, HTTPResponse(*func)(char[512])) {

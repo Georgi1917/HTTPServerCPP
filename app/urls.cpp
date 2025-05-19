@@ -7,7 +7,7 @@ UrlRouter router = UrlRouter();
 
 void AddingRoutes() {
 
-    router.AddRoute(" ", index);
+    router.AddRoute("", index);
     std::cout << "Abra Kadabra!!!" << std::endl;
 
 }

@@ -172,6 +172,8 @@ int main() {
 
 	std::cout << "Listening on Port: " << DEFAULT_PORT << "\n\n";
 
+	AddingRoutes();
+
 	while(1) {
 
 		ClientSocket = accept(ListenSocket, NULL, NULL);
@@ -203,14 +205,17 @@ int main() {
 
 		}
 
-		AddingRoutes();
-
 		std::string url = GetURL(request);
 
-		if (url == "") std::cout << "Yes\n" << std::endl;
-		else std::cout << "No\n" << std::endl;
+		UrlNode node = router.SearchForNode(url);
+		HTTPResponse hr = node.Execute(request);
+
+		std::cout << hr.GetResponse() << std::endl;
+
+		//if (url == "") std::cout << "Yes\n" << std::endl;
+		//else std::cout << "No\n" << std::endl; //works
 		
-		HTTPResponse hr = buildHttpResponse(request);
+		//HTTPResponse hr = buildHttpResponse(request);
 		
 		send(ClientSocket, hr.GetResponse().c_str(), hr.GetResponse().size(), 0);
 
