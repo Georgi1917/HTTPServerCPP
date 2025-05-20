@@ -6,6 +6,12 @@
 
 HTTPResponse index(char request[512]) {
 
-    return Render(request, "template/index.html");
+    return Render(request, "templates/index.html");
+
+}
+
+HTTPResponse about(char request[512]) {
+
+    return Render(request, "templates/about.html");
 
 }

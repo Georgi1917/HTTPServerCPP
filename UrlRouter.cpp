@@ -38,7 +38,7 @@
 // };
 
 UrlNode::UrlNode(std::string requestUrl, HTTPResponse(*func)(char[512])) : url(requestUrl), funcPtr(func) {}
-HTTPResponse UrlNode::Execute(char value[512]) { funcPtr(value); }
+HTTPResponse UrlNode::Execute(char value[512]) { return funcPtr(value); }
 std::string UrlNode::GetUrl() { return this->url; }
 
 void UrlRouter::AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
@@ -51,9 +51,13 @@ void UrlRouter::AddRoute(std::string url, HTTPResponse(*func)(char[512])) {
 
 UrlNode UrlRouter::SearchForNode(std::string url) {
 
+    std::cout << "1" << std::endl;
+
     for (int i = 0; i < routes.size(); i++) {
 
         UrlNode route = routes[i];
+
+        std::cout << "aaa" + route.GetUrl() + "bbb" << std::endl;
 
         if (route.GetUrl() == url) return route;
 

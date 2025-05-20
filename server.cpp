@@ -207,8 +207,20 @@ int main() {
 
 		std::string url = GetURL(request);
 
+		std::cout << "2" << std::endl;
+
+		if (endsWith(url, ".css") || endsWith(url, ".ico")) {
+
+			shutdown(ClientSocket, SD_SEND);
+			closesocket(ClientSocket);
+			continue;
+
+		}
+
 		UrlNode node = router.SearchForNode(url);
+		std::cout << "3" << std::endl;
 		HTTPResponse hr = node.Execute(request);
+		std::cout << "4" << std::endl;
 
 		std::cout << hr.GetResponse() << std::endl;
 
